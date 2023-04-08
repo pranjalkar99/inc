@@ -4,11 +4,7 @@
     <input id="title" class="create-post__input" v-model="title" />
 
     <label for="body" class="create-post__label">body:</label>
-    <textarea
-      id="body"
-      class="create-post__input"
-      v-model="body"
-    ></textarea>
+    <textarea id="body" class="create-post__input" v-model="body"></textarea>
 
     <label for="image-upload" class="create-post__label"
       >Image/File Upload:</label
@@ -22,28 +18,37 @@
 
     <button class="create-post__button" @click="createPost">Post</button>
   </div>
-  <div
+  <!-- <div
     class="alert alert-warning alert-dismissisable fade show mt-4"
     v-if="error"
     role="alert"
   >
     <strong>{{ error }}</strong>
-  </div>
+  </div> -->
 </template>
   
-  
-  <script>
-  import axios from 'axios';
+ 
 
+
+
+
+
+  <script>
+import axios from "axios";
 
 export default {
+  
   data() {
     return {
       title: "",
       body: "",
       image: null,
       error: null,
+      accessToken: null
     };
+  },
+  mounted() {
+    this.accessToken = localStorage.getItem('access_token')
   },
   methods: {
     handleImageUpload(event) {
@@ -56,14 +61,15 @@ export default {
         const formData = {
           title: this.title,
           body: this.body,
-        }
+        };
 
-      console.log("this is formData", formData)
-    //   formData.append('image', this.image)
+        console.log("this is formData", formData);
+        //   formData.append('image', this.image)
 
-        axios.post('http://localhost:5000/add_article', formData)
-        .then((resp) => {
-            console.log(resp)
+        axios
+          .post("http://localhost:5000/add_article", formData)
+          .then((resp) => {
+            console.log(resp);
             this.$router.push({
               name: "home",
             });
@@ -82,7 +88,7 @@ export default {
       // Reset the form after submitting the data
       this.title = "";
       this.body = "";
-    //   this.image = null;
+      //   this.image = null;
     },
   },
 };

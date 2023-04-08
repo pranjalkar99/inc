@@ -1,173 +1,230 @@
+-Formatted HTML-
+ 
 <template>
-  <!-- Breadcrumb -->
-  <nav aria-label="breadcrumb" class="main-breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><router-link to="/">Home</router-link></li>
-      <li class="breadcrumb-item active" aria-current="page">User Profile</li>
-    </ol>
-  </nav>
-  <!-- /Breadcrumb -->
-  <div class="container-biggy">
-    <div class="row align-items-start">
-    <div class="col ">
-      <div class="row gutters-sm">
-        <div class="">
-          <div class="card">
+  
+   <div class="container">
+      <nav aria-label="breadcrumb" class="main-breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+               <router-link to="/">Home</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+         </ol>
+      </nav>
+      <div class="row" style="height: 80vh">
+         <div class="col-md-2">
+            <div class="card">
+               <div class="card-body">
+                  <div class="d-flex flex-column align-items-center text-center">
+                    
+                     <img
+                        :src="
+                        user.image_link
+                        ? user.image_link
+                        : 'https://bootdey.com/img/Content/avatar/avatar7.png'
+                        "
+                        alt="No Photo Available"
+                        class="rounded-circle"
+                        width="150"
+                        />
+                     <input
+                        type="file"
+                        @change="handleFileUpload"
+                        ref="fileInput"
+                        style="display: none"
+                        />
+                     <button
+                        class="btn btn-primary mt-3"
+                        @click="$refs.fileInput.click()"
+                        >
+                     Upload Image
+                     </button>
+                  </div>
+                  <p class="card-title d-flex justify-content-center">
+                     @{{ user.handle }}
+                  </p>
+                  <h4 class="card-text">{{ user.fullname || "Empty" }}</h4>
+               </div>
+            </div>
+            <div class="my-2 py-2"></div>
+            <div class="card">
+               <div class="card-body">
+                  <div
+                     class="d-flex flex-column align-items-center text-center"
+                     >
+                     <i class="fas fa-user-friends"></i>
+                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"  viewBox="0 0 640 512"><!-- Font Awesome Pro 5.15.4 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) --><path d="M192 256c61.9 0 112-50.1 112-112S253.9 32 192 32 80 82.1 80 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C51.6 288 0 339.6 0 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zM480 256c53 0 96-43 96-96s-43-96-96-96-96 43-96 96 43 96 96 96zm48 32h-3.8c-13.9 4.8-28.6 8-44.2 8s-30.3-3.2-44.2-8H432c-20.4 0-39.2 5.9-55.7 15.4 24.4 26.3 39.7 61.2 39.7 99.8v38.4c0 2.2-.5 4.3-.6 6.4H592c26.5 0 48-21.5 48-48 0-61.9-50.1-112-112-112z"/></svg>
+            <span>Number of followers: 100</span>
+            <svg xmlns="http://www.w3.org/2000/svg"  width="40" height="40"  viewBox="0 0 640 512"><!--! Font Awesome Pro 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>
+            <span>Number of users followed by: 50</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-md-8">
+         <div class="card">
             <div class="card-body">
-              <div class="d-flex flex-column align-items-center text-center">
-                <img
-                  src="https://bootdey.com/img/Content/avatar/avatar7.png"
-                  alt="No Photo Available"
-                  class="rounded-circle"
-                  width="150"
-                />
-                <div class="mt-3">
-                  <h4>{{ user.name }}</h4>
-                  <p class="text-secondary mb-1">@johndoe21</p>
-                  <p class="text-muted font-size-sm">Email: {{ user.email }}</p>
-
-                  <button class="btn btn-primary" @click="showModal = true">
-                    Edit Profile
-                  </button>
-                  <button class="btn btn-outline-primary">Share</button>
-                </div>
-              </div>
+               <h5 class="card-title">Bio</h5>
+               <ul class="list-group list-group-flush">
+                  <li
+                     class="list-group-item py-4 d-flex justify-content-center px-1"
+                     >
+                     About:
+                     <textarea
+                        class="form-control mx-2"
+                        :placeholder="user.bio ? user.bio : 'Empty'"
+                        ></textarea>
+                  </li>
+                  <li class="list-group-item" :disabled="!editing">
+                     Username: {{ user.username || "Empty" }}
+                  </li>
+                  <li class="list-group-item">
+                     Date of Birth:
+                     <VueDatePicker
+                        v-model="dob"
+                        :disabled="!editing"
+                        :placeholder="user.dob ? user.dob : 'Empty'"
+                        ></VueDatePicker>
+                  </li>
+                  <li class="list-group-item">
+                     User Number:
+                     <input
+                        type="text"
+                        class="form-control"
+                        :placeholder="user.number ? user.number : 'Empty'"
+                        name="username"
+                        disabled
+                        aria-label="number"
+                        aria-describedby="basic-addon1"
+                        />
+                  </li>
+                  <li class="list-group-item">
+                     Phone Number:
+                     <input
+                        type="text"
+                        name="number"
+                        class="form-control"
+                        :placeholder="user.phoneNumber ? user.phoneNumber : 'Empty'"
+                        :disabled="!editing"
+                        aria-label="number"
+                        aria-describedby="basic-addon1"
+                        />
+                  </li>
+                  <!-- Add more profile details here -->
+               </ul>
+               <button
+                  class="btn btn-primary mt-3 float-right"
+                  @click="updateProfile()"
+                  >
+               Edit
+               </button>
+               <button
+                  class="btn btn-success mt-3 mx-2 float-right"
+                  :disabled="!editing"
+                  @click="updatePostProfile()"
+                  >
+               Update
+               </button>
             </div>
-          </div>
-        </div>
+         </div>
       </div>
-    </div>
-    <div v-if="showModal">
-      <edit-profile
-        :show="showModal"
-        :user="user"
-        @close="showModal = false"
-        @save="saveChanges"
-      ></edit-profile>
-    </div>
-
-    <div class="col">
-      <div class="col-md-8">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Full Name</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">Kenneth Valdez</div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Email</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">fip@jukmuh.al</div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Phone</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">(239) 816-9029</div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Mobile</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">(320) 380-4539</div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-3">
-                <h6 class="mb-0">Address</h6>
-              </div>
-              <div class="col-sm-9 text-secondary">
-                Bay Area, San Francisco, CA
-              </div>
-            </div>
-            <hr />
-            <div class="row">
-              <div class="col-sm-12">
-                <a
-                  class="btn btn-info"
-                  target="__blank"
-                  href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills"
-                  >Edit</a
-                >
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div></div>
-    <div class="card mt-3">
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
-                    <span class="text-secondary">https://bootdey.com</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github mr-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
-                    <span class="text-secondary">bootdey</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter mr-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
-                    <span class="text-secondary">@bootdey</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram mr-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                    <span class="text-secondary">bootdey</span>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook mr-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                    <span class="text-secondary">bootdey</span>
-                  </li>
-                </ul>
-              </div>
-  </div>
+      
+   </div>
+   
+  
 </template>
+
+
 <script>
-import EditProfile from "./ModalShow.vue";
+import axios from "axios";
+import VueDatePicker from "@vuepic/vue-datepicker";
 
 export default {
-  components: {
-    EditProfile,
-  },
+  components: { VueDatePicker },
   data() {
     return {
       user: {
-        name: "John Doe",
-        email: "johndoe@example.com",
+        photo: '',
       },
-      showModal: false,
+      fileData: null,
+      editing: false,
+      file: null,
+      imageUrl: null,
     };
   },
   methods: {
-    saveChanges(updatedUser) {
-      // Update user profile with new data
-      this.user.name = updatedUser.name;
-      this.user.email = updatedUser.email;
+    handleFileUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
 
-      // Hide the modal
-      this.showModal = false;
+      reader.onload = () => {
+        this.user.photo = reader.result;
+      };
+      const dpData = new FormData();
+      dpData.append("file",   file);
+      const token = localStorage.getItem("access_token");
+      axios
+        .put("http://localhost:7000/update-dp", dpData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          this.user = response.data;
+          this.editing = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
     },
+    updateProfile() {
+      // Add code to update user profile here
+      this.editing = true;
+    },
+    updatePostProfile() {
+      // Add code to update user profile here
+      this.editing = false;
+      const formData = new FormData();
+      formData.append("bio", document.querySelector("#bio").value);
+      formData.append("dob", document.querySelector("#dob").value);
+      formData.append("username", document.querySelector("#username").value);
+      formData.append("phoneNumber", document.querySelector("#number").value);
+      formData.append("file", this.file);
+      const token = localStorage.getItem("access_token");
+      axios
+        .put("http://localhost:7000/update-profile", formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          this.user = response.data;
+          this.editing = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
+  mounted() {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      axios
+        .get("http://localhost:7000/get_profile", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((response) => {
+          this.user = response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
 </script>
-<style lang="scss" scoped>
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  h1,
-  p {
-    margin-bottom: 16px;
-  }
-  h1 {
-    font-size: 32px;
-  }
-  p {
-    font-size: 18px;
-  }
-}
-</style>
