@@ -53,14 +53,17 @@ export default {
       if (!this.title || !this.body) {
         this.error = "Please fillup all fields.";
       } else {
-        const formData = new FormData()
-      formData.append('title', this.title)
-      formData.append('body', this.body)
+        const formData = {
+          title: this.title,
+          body: this.body,
+        }
+
+      console.log("this is formData", formData)
     //   formData.append('image', this.image)
 
         axios.post('http://localhost:5000/add_article', formData)
-          .then((resp) => resp.json())
-          .then(() => {
+        .then((resp) => {
+            console.log(resp)
             this.$router.push({
               name: "home",
             });
