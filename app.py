@@ -124,11 +124,17 @@ class UserSchema(Schema):
     fullname = fields.String(required=True)
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
+    class Meta:
+        fields=('id','username','fullname','created_at','updated_at')
 
 class ArticleSchema(ma.Schema):
     class Meta:
         fields=('id','title','body','date','likes','author_id')
 
+
+
+user_schema=UserSchema()
+users_schema=UserSchema(many=True)
 
 article_schema=ArticleSchema()
 articles_schema=ArticleSchema(many=True)
@@ -140,6 +146,8 @@ def test():
     print(name)
     return "Successful"
 
+
+    return "Successful"
 ## Authentication
 @app.route("/register", methods=["POST"])
 def register():
@@ -169,7 +177,7 @@ def register():
         db.session.add(user_info)
         db.session.commit()
         access_token = create_access_token(identity=user_info.id)
-        return jsonify({"access_token": access_token}), 200
+        return jsonify({"access_token": access_token,}), 200
 
 
 @app.route("/get_profile")
@@ -199,26 +207,22 @@ def update_photo():
             user.image_link=image_link
             db.session.commit()
             return jsonify({'message': 'DP updated successfully...'}), 200
+        
 
-
-@app.route("/articles/<article_id>/like", methods=["POST","PUT"])  
-@jwt_required() 
-def like_Art(article_id):
+@app.route('/articles/<article_id>/like', methods=['POST'])
+@jwt_required
+def like_article(article_id):
     current_user_id = get_jwt_identity()
-    user_e = User.query.filter_by(id=current_user_id).first()
-    if not user_e:
-        return jsonify({'message': 'User not found'}), 404
-    else:
-        if request.is_json:
-            data = request.get_json()
-        else:
-            data = request.form
-        art=Articles.query.filter_by(id=article_id, author_id=user_e.id ).first()
-        if data.get('likes'):
-            art.likes+=1
-            db.session.commit()
 
-            return {"msg":"Updated the like"},201
+    article = Articles.query.get_or_404(article_id)
+
+    # if article.author_id == current_user_id:
+    #     return jsonify({'message': 'You cannot like your own article.'}), 400
+
+    article.likes += 1
+    db.session.commit()
+
+    return jsonify({'likes': article.likes}), 200
 
 
 
@@ -285,13 +289,9 @@ def login():
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_token = create_access_token(identity=user.id)
-    update_last_logged.delay(user.id)
+    # update_last_logged.delay(user.id)
     return jsonify(access_token=access_token), 200
 
-@app.route("/dashboard")
-@jwt_required
-def dasboard():
-    return jsonify(message="Welcome! to the Data Science Learner")
 
 ## nOrmal Routes
 
@@ -369,13 +369,53 @@ def update_article(id):
     db.session.commit()
     return article_schema.jsonify(query_art)
 
-@app.route("/delete_article/<id>",methods=["DELETE"])
-def delete_article(id):
-    query_art=Articles.query.get(id)
-    db.session.delete(query_art)
-    db.session.commit()
-    return article_schema.jsonify(query_art)
 
+# @app.route("/d_articles/<int:id>", methods=["DELETE"])
+# @jwt_required
+# def article_remove(id):
+#     article = Articles.query.get(id=id)
+#     if not article:
+#         return jsonify({'message': 'Article not found in db'}), 404
+
+#     current_user_id = get_jwt_identity()
+#     if article.author_id != current_user_id:
+#         return jsonify({'message': 'Not authorized to delete this article...'}), 403
+
+#     db.session.delete(article)
+#     db.session.commit()
+#     return jsonify({'message': 'Article deleted successfully..'}), 200
+
+
+@app.route("/link-follower/<int:follower_id>/<int:followed_id>",methods=["GET"])
+def link_follower_to_user(follower_id,followed_id):
+    try:
+        follow=Follower(followed_id=followed_id,follower_id=follower_id)
+
+        db.session.add(follow)
+        db.session.commit()
+        return {"msg":"Success"},201
+    except:
+        return {"msg":"Fail"},404
+
+
+
+
+
+@app.route("/list-all-users",methods=["GET"])
+@jwt_required()
+def listall():
+    user_list = User.query.all()
+    serialized_user_list = []
+    current_user_id = get_jwt_identity()
+    for user in user_list:
+        serialized_user_list.append({
+            "id": user.id,
+            "username": user.username,
+            "full_name": user.fullname,
+            "handle_id": user.handle_id
+            # add more attributes as needed
+        })
+    return jsonify(serialized_user_list, current_user_id),  200
 
 
 
