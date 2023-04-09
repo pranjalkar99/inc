@@ -1,4 +1,4 @@
--Formatted HTML-
+
  
 <template>
   
@@ -12,7 +12,7 @@
          </ol>
       </nav>
       <div class="row" style="height: 80vh">
-         <div class="col-md-2">
+         <div class="col-md-3">
             <div class="card">
                <div class="card-body">
                   <div class="d-flex flex-column align-items-center text-center">
@@ -41,12 +41,12 @@
                      </button>
                   </div>
                   <p class="card-title d-flex justify-content-center">
-                     @{{ user.handle }}
+                     @{{ user.handle_id }}
                   </p>
                   <h4 class="card-text">{{ user.fullname || "Empty" }}</h4>
                </div>
             </div>
-            <div class="my-2 py-2"></div>
+            <div class="my-2 py-2 col"></div>
             <div class="card">
                <div class="card-body">
                   <div
@@ -61,7 +61,36 @@
                </div>
             </div>
          </div>
-         <div class="col-md-8">
+         <div class=" col container">
+          <div class="card mx-2 px-1 py-2 my-2">
+            <h2 class="d-flex justify-content-center">Edit Profile</h2>
+    <form @submit.prevent="updatePostProfile">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" class=" d-flex align-items-stretch d-flex justify-content-end" :placeholder="user.fullname ? user.fullname : 'ENter name' " v-model="fullname" />
+      </div>
+      <div class="form-group">
+        <label for="imageLink">Profile Picture</label>
+        <input type="file" class="form-control-file" id="imageLink" :placeholder="user.image_link ? user.image_link : 'ENter pic' " @change="onFileChange" />
+      </div>
+      <div class="form-group">
+        <label for="number">Phone Number</label>
+        <input type="text" class="form-control" id="number" v-model="number"  :placeholder="user.number ? user.number : 'ENter number' "/>
+      </div>
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <textarea class="form-control" id="bio" rows="3" v-model="bio" :placeholder="user.bio ? user.bio : 'ENter bio' "></textarea>
+      </div>
+      <div class="form-group">
+        <label for="dateOfBirth">Date of Birth</label>
+        <input type="date" class="form-control" id="dateOfBirth" v-model="date_of_birth" :placeholder="user.dob ? user.dob : 'ENter dob' " />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+          </div>
+    
+  </div>
+         <!-- <div class="col-md-8">
          <div class="card">
             <div class="card-body">
                <h5 class="card-title">Bio</h5>
@@ -71,13 +100,19 @@
                      >
                      About:
                      <textarea
-                        class="form-control mx-2"
-                        :placeholder="user.bio ? user.bio : 'Empty'"
+
+                        class="form-control mx-2" 
+                        :placeholder="user.bio ? user.bio : 'Empty' "
                         ></textarea>
                   </li>
-                  <li class="list-group-item" :disabled="!editing">
-                     Username: {{ user.username || "Empty" }}
-                  </li>
+                  Username:
+                  <textarea
+
+                        class="form-control mx-2" 
+                        :placeholder="user.username ? user.username : 'Empty' " disabled
+                        ></textarea>
+                        <p clss="alert alert-warning">This is fixed.</p>
+                
                   <li class="list-group-item">
                      Date of Birth:
                      <VueDatePicker
@@ -87,13 +122,12 @@
                         ></VueDatePicker>
                   </li>
                   <li class="list-group-item">
-                     User Number:
+                     Full Name:
                      <input
                         type="text"
                         class="form-control"
-                        :placeholder="user.number ? user.number : 'Empty'"
+                        :placeholder="user.fullname ? user.fullname : 'Empty'"
                         name="username"
-                        disabled
                         aria-label="number"
                         aria-describedby="basic-addon1"
                         />
@@ -104,15 +138,15 @@
                         type="text"
                         name="number"
                         class="form-control"
-                        :placeholder="user.phoneNumber ? user.phoneNumber : 'Empty'"
+                        :placeholder="user.number ? user.number : 'No number provided. Fillin Now..'"
                         :disabled="!editing"
                         aria-label="number"
                         aria-describedby="basic-addon1"
                         />
                   </li>
-                  <!-- Add more profile details here -->
-               </ul>
-               <button
+                -->
+           <div>
+            <button
                   class="btn btn-primary mt-3 float-right"
                   @click="updateProfile()"
                   >
@@ -125,28 +159,94 @@
                   >
                Update
                </button>
+           </div>
+           </div>
+           </div>
+<!--                
             </div>
          </div>
-      </div>
+      </div> 
       </div>
       
    </div>
-   
-  
+   </
+   -->
 </template>
 
-
-<script>
-import axios from "axios";
+<!-- <script>
+import axios from 'axios';
 import VueDatePicker from "@vuepic/vue-datepicker";
-
 export default {
   components: { VueDatePicker },
   data() {
     return {
+      fullname: '',
+      // imageLink: '',
+      number: '',
+      bio: '',
+      dateOfBirth: '',
+    };
+  },
+  methods: {
+    async updatePostProfile() {
+      const formData = new FormData();
+      if (this.fullname) {
+        formData.append('fullname', this.fullname);
+      }
+      // if (this.imageLink) {
+      //   formData.append('image_link', this.imageLink);
+      // }
+      if (this.number) {
+        formData.append('number', this.number);
+      }
+      if (this.bio) {
+        formData.append('bio', this.bio);
+      }
+      if (this.dateOfBirth) {
+        formData.append('date_of_birth', this.dateOfBirth);
+      }
+
+      try {
+        const response = await axios.put('localhost:7000/update_profile', Object.fromEntries(formData.entries()), {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+        console.log(response.data);
+        // Handle success case
+      } catch (error) {
+        console.error(error);
+        // Handle error case
+      }
+    },
+    updateProfile() {
+      // Add code to update user profile here
+      this.editing = true;
+    },
+  },
+};
+</script> -->
+
+<script>
+import axios from "axios";
+// import VueDatePicker from "@vuepic/vue-datepicker";
+
+export default {
+  // components: { VueDatePicker },
+  data() {
+    return {
       user: {
-        photo: '',
+        image_link: '',
+        dob:'',
+        bio:'',
+        fullname:'',
+        handle_id:'',
+
+
       },
+      
+
       fileData: null,
       editing: false,
       file: null,
@@ -186,29 +286,31 @@ export default {
       this.editing = true;
     },
     updatePostProfile() {
-      // Add code to update user profile here
-      this.editing = false;
       const formData = new FormData();
-      formData.append("bio", document.querySelector("#bio").value);
-      formData.append("dob", document.querySelector("#dob").value);
-      formData.append("username", document.querySelector("#username").value);
-      formData.append("phoneNumber", document.querySelector("#number").value);
-      formData.append("file", this.file);
-      const token = localStorage.getItem("access_token");
-      axios
-        .put("http://localhost:7000/update-profile", formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then((response) => {
-          this.user = response.data;
-          this.editing = false;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+const token = localStorage.getItem('access_token');
+
+formData.append('fullname', this.fullname ? this.fullname : '');
+formData.append('image_link', this.imageLink ? this.imageLink : '');
+formData.append('number', this.number ? this.number : '');
+formData.append('bio', this.bio ? this.bio : '');
+formData.append('date_of_birth', this.dateOfBirth ? this.dateOfBirth : '');
+
+axios
+  .put('http://localhost:7000/update_profile', formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+  .then((response) => {
+    console.log(response.data);
+    // redirect to /profile on success
+    this.$router.push('/profile');
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
     },
   },
   mounted() {
@@ -227,4 +329,4 @@ export default {
     }
   },
 };
-</script>
+</script> 

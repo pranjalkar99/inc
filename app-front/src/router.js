@@ -6,7 +6,7 @@ import ListFollowers from "./components/ListFollowers.vue"
 import ProfileView from "./components/ProfileView.vue"
 import LoginPage from "./components/LoginPage.vue"
 import SignUp from "./components/SignUp.vue"
-
+import testpage from "./components/StartingPage.vue"
 const routes=[
     {
         path: "/",
@@ -17,6 +17,11 @@ const routes=[
         path: "/signup",
         name:"signup",
         component:SignUp,
+    },
+    {
+        path: "/test",
+        name:"test",
+        component:testpage,
     },
     {
         path: "/home",

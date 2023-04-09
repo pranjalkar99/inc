@@ -6,9 +6,9 @@
     <label for="body" class="create-post__label">body:</label>
     <textarea id="body" class="create-post__input" v-model="body"></textarea>
 
-    <label for="image-upload" class="create-post__label"
+    <!-- <label for="image-upload" class="create-post__label"
       >Image/File Upload:</label
-    >
+    > -->
     <div class="create-post__file-upload">
       <input type="file" id="image-upload" @change="handleImageUpload" />
       <span class="create-post__file-upload-label">{{
@@ -55,41 +55,35 @@ export default {
       this.image = event.target.files[0];
     },
     createPost() {
-      if (!this.title || !this.body) {
-        this.error = "Please fillup all fields.";
-      } else {
-        const formData = {
-          title: this.title,
-          body: this.body,
-        };
-
-        console.log("this is formData", formData);
-        //   formData.append('image', this.image)
-
-        axios
-          .post("http://localhost:5000/add_article", formData)
-          .then((resp) => {
-            console.log(resp);
-            this.$router.push({
-              name: "home",
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
-      // Here you can send the data to your backend API to create a new post
-      console.log("Creating post...", {
-        title: this.title,
-        body: this.body,
-        // image: this.image,
+  if (!this.title || !this.body) {
+    this.error = "Please fill up all fields.";
+  } else {
+    const formData = {
+      title: this.title,
+      body: this.body,
+    };
+    const token=localStorage.getItem("access_token");
+    axios.put("http://localhost:7000/add_article", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then((resp) => {
+      console.log(resp);
+      this.$router.push({
+        name: "home",
       });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
 
-      // Reset the form after submitting the data
-      this.title = "";
-      this.body = "";
-      //   this.image = null;
-    },
+  // Reset the form after submitting the data
+  this.title = "";
+  this.body = "";
+}
+,
   },
 };
 </script>

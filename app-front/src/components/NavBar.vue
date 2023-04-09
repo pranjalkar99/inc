@@ -67,12 +67,15 @@ export default {
   mounted() {
     this.accessToken = localStorage.getItem('access_token')
   },
+  beforeCreate() {
+    this.accessToken = localStorage.getItem('access_token')
+  },
   beforeMount(){
     this.accessToken = localStorage.getItem('access_token');
   },
   methods:{
     logout() {
-      localStorage.removeItem("accessToken");
+      localStorage.removeItem("access_token");
       this.$router.push("/");
     }
   }
