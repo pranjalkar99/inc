@@ -60,7 +60,7 @@
               </div>
               <div class="mb-3">
                 <div class="d-flex align-items-center">
-                  <a href="#!" class="text-danger mr-2" @click.prevent="likeArticle(article)">
+                  <a class="text-danger mr-2" @click="likeArticle(article.id)">
                     <span>
                       <i class="fa fa-heart"></i>
                     </span>

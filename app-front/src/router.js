@@ -7,6 +7,7 @@ import ProfileView from "./components/ProfileView.vue"
 import LoginPage from "./components/LoginPage.vue"
 import SignUp from "./components/SignUp.vue"
 import testpage from "./components/StartingPage.vue"
+import ListUsers from "./components/ListUsers.vue"
 const routes=[
     {
         path: "/",
@@ -62,6 +63,19 @@ const routes=[
             }
           }
     },
+    {
+      path:"/users",
+      name:"listusers",
+      component:ListUsers,
+      beforeEnter: (to, from, next) => {
+          const accessToken = localStorage.getItem('access_token')
+          if (accessToken) {
+            next()
+          } else {
+            next('/')
+          }
+        }
+  },
     {
         path:"/profile",
         name:"profile",
